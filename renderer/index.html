@@ -1,0 +1,271 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- Copyright (c) 2026 TheBestPlan -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:" />
+  <title>Killing Floor Bot Client</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="titlebar">
+    <img id="tb-icon" src="icon.png" alt="" />
+    <span id="tb-title">Killing Floor Bot Client</span>
+    <span class="tb-spacer"></span>
+    <div id="tb-controls">
+      <button id="tb-min" data-i18n-title="win.min" title="Minimize" tabindex="-1">&#xE921;</button>
+      <button id="tb-max" data-i18n-title="win.max" title="Maximize" tabindex="-1">&#xE922;</button>
+      <button id="tb-close" data-i18n-title="win.close" title="Close" tabindex="-1">&#xE8BB;</button>
+    </div>
+  </div>
+  <div id="menubar">
+    <div class="menu" data-menu="system"><span data-i18n-html="menu.system"><u>S</u>ystem</span>
+      <div class="menu-pop">
+        <div class="mi" data-act="start" data-i18n="mi.connect">Connect</div>
+        <div class="mi" data-act="stop" data-i18n="mi.disconnect">Disconnect</div>
+        <div class="mi" data-act="restart" data-i18n="mi.restart">Restart</div>
+        <div class="msep"></div>
+        <div class="mi" data-act="exit" data-i18n="mi.exit">Exit</div>
+      </div>
+    </div>
+    <div class="menu" data-menu="view"><span data-i18n-html="menu.view"><u>V</u>iew</span>
+      <div class="menu-pop">
+        <div class="mi" data-act="toggle-map" data-i18n="mi.virtualmap">Virtual Map</div>
+        <div class="mi" data-act="toggle-char" data-i18n="mi.char">Char</div>
+        <div class="mi" data-act="toggle-objs" data-i18n="mi.player">Player</div>
+        <div class="mi" data-act="toggle-log" data-i18n="mi.kfinfo">KF Information</div>
+        <div class="msep"></div>
+        <div class="mi" data-act="clearlog" data-i18n="mi.clearlog">Clear log</div>
+      </div>
+    </div>
+    <div class="menu" data-menu="setup"><span data-i18n-html="menu.setup"><u>S</u>etup</span>
+      <div class="menu-pop">
+        <div class="mi" data-act="tab-conn" data-i18n="mi.connection">Connection…</div>
+        <div class="mi" data-act="tab-auto" data-i18n="mi.autoready">Auto-Ready…</div>
+        <div class="mi" data-act="tab-steam" data-i18n="mi.steam">Steam…</div>
+        <div class="mi" data-act="tab-adv" data-i18n="mi.advanced">Advanced…</div>
+        <div class="msep"></div>
+        <div class="mi has-sub"><span data-i18n="mi.language">Language</span>
+          <div class="menu-pop sub" id="lang-pop"></div>
+        </div>
+      </div>
+    </div>
+    <div class="menu mbtn" data-act="server-browser" data-i18n-title="tt.browser" title="Browse and join Killing Floor servers"><span data-i18n-html="menu.browser">Server <u>B</u>rowser</span></div>
+    <div class="menu" data-menu="help"><span data-i18n-html="menu.help"><u>H</u>elp</span>
+      <div class="menu-pop"><div class="mi" data-act="about" data-i18n="mi.about">About…</div></div>
+    </div>
+  </div>
+
+  <div id="toolbar">
+    <label class="tb-lab" data-i18n="tb.ip">IP</label>
+    <span class="combo srv"><input id="f-server" list="dl-servers" type="text" value="" data-i18n-title="tt.server" title="Server host:port — type it or pick one in the Server Browser" /><i class="arw"></i></span>
+    <datalist id="dl-servers"></datalist>
+    <label class="tb-lab" data-i18n="tb.char">CHAR</label>
+    <span class="combo nm"><input id="f-name" list="dl-names" type="text" value="KFPlayer" data-i18n-title="tt.name" title="Player name" /><i class="arw"></i></span>
+    <datalist id="dl-names"></datalist>
+    <label class="tb-lab" data-i18n="tb.id">ID</label><input id="f-steamid" type="text" value="" data-i18n-ph="ph.steamid" placeholder="auto (Steam)" data-i18n-title="tt.steamid" title="SteamID to connect with — leave blank to use your logged-in Steam account" />
+    <label class="tb-chk" data-i18n-title="tt.randomId" title="Connect with a fresh random valid SteamID64 instead of the ticket's"><input type="checkbox" id="f-randomId" /><span data-i18n="tb.randomId">Random ID</span></label>
+    <span class="tb-dsep"></span>
+    <button id="btn-login" data-i18n="btn.connect" data-i18n-title="tt.connect" title="Connect and run the bot">Connect</button>
+    <button id="btn-logout" disabled data-i18n="btn.disconnect" data-i18n-title="tt.disconnect" title="Disconnect from the server">Disconnect</button>
+    <button id="btn-restart" data-i18n="btn.restart" data-i18n-title="tt.restart" title="Disconnect + Connect">Restart</button>
+    <span class="tb-dsep"></span>
+    <button id="btn-ready" disabled data-i18n="btn.ready" data-i18n-title="tt.ready" title="ServerRestartPlayer (spawn)">Ready</button>
+    <span class="tb-grow"></span>
+  </div>
+
+  <div class="statrow">
+    <span class="st-lab"><span data-i18n="st.level">Level:</span> <b id="st-level">&mdash;</b></span>
+    <span class="st-lab" data-i18n="st.hp">HP</span><div class="stbar hp"><div id="bar-hp" class="stfill"></div><span id="val-hp" class="stval">&mdash;</span></div>
+    <span class="st-lab" data-i18n="st.ap">AP</span><div class="stbar ap"><div id="bar-ap" class="stfill"></div><span id="val-ap" class="stval">&mdash;</span></div>
+    <span class="st-lab" data-i18n="st.exp">EXP</span><div class="stbar exp"><div id="bar-exp" class="stfill"></div><span id="val-exp" class="stval">&mdash;</span></div>
+    <span class="st-lab" data-i18n="st.load">Load</span><div class="stbar load"><div id="bar-load" class="stfill"></div><span id="val-load" class="stval">&mdash;</span></div>
+  </div>
+  <div class="statrow">
+    <span class="st-lab" data-i18n="st.target">Target: HP</span><div class="stbar hp"><div id="bar-thp" class="stfill"></div><span id="val-thp" class="stval">&mdash;</span></div>
+    <span class="st-lab" data-i18n="st.ap">AP</span><div class="stbar ap"><div id="bar-tap" class="stfill"></div><span id="val-tap" class="stval">&mdash;</span></div>
+    <span class="tb-vsep"></span>
+    <span id="wave-wrap" class="st-lab wave-wrap hidden"><span data-i18n="st.wave">Wave</span> <b id="st-wave">&mdash;</b><span id="st-wavestate" class="wave-state"></span></span>
+    <span class="tb-vsep"></span>
+    <span id="dl-wrap" class="dl-wrap hidden"><span class="dl-bar"><span id="dl-fill"></span></span><span id="dl-text" class="dl-text">&mdash;</span></span>
+  </div>
+
+  <div id="main">
+    <div class="col" id="col-left">
+      <div class="panel" id="p-map">
+        <div class="panel-title"><span data-i18n="panel.virtualmap">Virtual Map</span><span class="panel-btns"><i class="x">✕</i></span></div>
+        <div class="panel-body nopad map-wrap">
+          <canvas id="map"></canvas>
+        </div>
+        <div class="map-strip">
+          <div class="mrow">
+            <span data-i18n="map.show">Show:</span>
+            <label><input type="checkbox" id="m-mon" checked /><span data-i18n="map.monsters">Monsters</span></label>
+            <label><input type="checkbox" id="m-player" checked /><span data-i18n="map.players">Players</span></label>
+            <label><input type="checkbox" id="m-item" checked /><span data-i18n="map.items">Items</span></label>
+            <label><input type="checkbox" id="m-trader" checked /><span data-i18n="map.traders">Traders</span></label>
+            <label><input type="checkbox" id="m-door" checked /><span data-i18n="map.doors">Doors</span></label>
+            <label><input type="checkbox" id="m-mover" checked /><span data-i18n="map.movers">Movers</span></label>
+            <span class="mgap" data-i18n="map.scale">Scale:</span><span id="m-scaleval" class="scaleval">1:10</span>
+            <input type="range" id="m-scale" min="0.25" max="50" step="0.25" value="10" />
+            <label><input type="checkbox" id="m-realmap" checked /><span data-i18n="map.realmap">Real Map</span></label>
+            <button id="m-reset" class="mbtn-reset" data-i18n="map.reset" data-i18n-title="tt.reset" title="Recenter the map on the origin / player (undo any pan)">Reset View</button>
+            <span id="m-coord" class="mcoord">x: 0, y: 0, z: 0</span>
+          </div>
+        </div>
+      </div>
+      <div class="panel" id="p-log">
+        <div class="panel-title"><span data-i18n="panel.kfinfo">KF Information</span><span class="panel-btns"><i class="x">✕</i></span></div>
+        <div class="panel-body nopad"><div id="log"></div></div>
+        <div class="chat-tabs">
+          <button class="ctab active" data-filter="all" data-i18n="tab.sys">Sys</button>
+          <button class="ctab" data-filter="evt" data-i18n="tab.events">Events</button>
+          <button class="ctab" data-filter="err" data-i18n="tab.errors">Errors</button>
+          <button class="ctab" data-filter="chat" data-i18n="tab.chat">Chat</button>
+          <span class="chat-grow"></span>
+          <button id="btn-clear" data-i18n="btn.clear" data-i18n-title="tt.clear" title="Clear log">clear</button>
+        </div>
+        <div class="chat-input"><span class="combo full"><input id="cmd" type="text" data-i18n-ph="ph.command" placeholder="command: ready | leave | stop | start | restart | clear" /><i class="arw"></i></span></div>
+      </div>
+    </div>
+
+    <div class="col" id="col-right">
+      <div class="panel" id="p-char">
+        <div class="panel-title"><span data-i18n="panel.char">Char</span><span class="panel-btns"><i class="x">✕</i></span></div>
+        <div class="panel-body">
+          <div class="tabpage" data-page="char">
+            <div class="frow"><label data-i18n="f.name">Name</label><span id="st-name">&mdash;</span></div>
+            <div class="frow"><label data-i18n="f.server">Server</label><span id="st-server">&mdash;</span></div>
+            <div class="frow"><label data-i18n="f.map">Map</label><span id="st-map">&mdash;</span></div>
+            <div class="frow"><label data-i18n="f.steamid">SteamID</label><span id="st-steamid">&mdash;</span></div>
+            <div class="frow"><label data-i18n="f.state">State</label><span id="st-state" class="state-text">init</span></div>
+            <div class="frow"><label data-i18n="f.steam">Steam</label><span id="st-mode" data-i18n="mode.synth">synthetic blob</span></div>
+            <div class="frow"><label data-i18n="f.perk">Perk</label><span id="st-perk">&mdash;</span></div>
+          </div>
+          <div class="tabpage hidden" data-page="conn">
+            <div class="frow check"><input id="f-pkgDownload" type="checkbox" checked /><label for="f-pkgDownload" data-i18n="f.pkgDownload">Download server resources on connect</label></div>
+            <div class="frow"><label data-i18n="f.ver">VER</label><input id="f-ver" type="number" value="3339" /></div>
+            <div class="frow"><label data-i18n="f.minver">MINVER</label><input id="f-minver" type="number" value="3180" /></div>
+            <div class="frow"><label data-i18n="f.netspeed">Netspeed</label><input id="f-netspeed" type="number" value="10000" /></div>
+            <div class="frow"><label data-i18n="f.connectTimeout">Connect timeout ms</label><input id="f-connectTimeout" type="number" value="30000" /></div>
+            <p class="hint" data-i18n="hint.conn">Download pulls a modded server's packages (HTTP redirect / in-game) before joining, so its classes decode and the map renders. Server &amp; name are on the toolbar (IP / CHAR).</p>
+          </div>
+          <div class="tabpage hidden" data-page="auto">
+            <div class="frow check"><input id="f-ready" type="checkbox" /><label for="f-ready" data-i18n="f.autoReady">Auto-Ready after admit</label></div>
+            <div class="frow"><label data-i18n="f.readyDelay">Ready delay ms</label><input id="f-readyDelay" type="number" value="5000" /></div>
+            <div class="frow"><label data-i18n="f.leaveDelay">Leave delay ms</label><input id="f-leaveDelay" type="number" value="10000" /></div>
+          </div>
+          <div class="tabpage hidden" data-page="steam">
+            <div class="frow check"><input id="f-realSteam" type="checkbox" checked /><label for="f-realSteam" data-i18n="f.realSteam">Use real Steam ticket</label></div>
+            <p class="hint" data-i18n="hint.steam1">Off: synthetic blob (Goldberg test server). On: genuine ticket via the 32-bit helper &mdash; needs Steam + an account owning KF (AppID&nbsp;1250).</p>
+            <div class="frow"><label data-i18n="f.webApiKey">Web API key</label><input id="f-steamKey" type="text" data-i18n-ph="ph.webApiKey" placeholder="for Server Browser" data-i18n-title="tt.webApiKey" title="Steam Web API key for the Server Browser master list — get one free at steamcommunity.com/dev/apikey" /></div>
+            <p class="hint" data-i18n="hint.steam2">Free key from steamcommunity.com/dev/apikey. Powers the Server Browser's Steam master list. Stored locally in settings.ini, never committed.</p>
+          </div>
+          <div class="tabpage hidden" data-page="adv">
+            <div class="frow"><label data-i18n="f.pcChannel">PC channel</label><input id="f-pcChannel" type="text" data-i18n-ph="ph.pcChannel" placeholder="auto (1,2)" /></div>
+            <div class="frow"><label data-i18n="f.restartIndex">Restart idx</label><input id="f-restartIndex" type="number" data-i18n-ph="ph.restartIndex" placeholder="capture" /></div>
+            <div class="frow"><label data-i18n="f.netMax">Net max</label><input id="f-netMax" type="number" value="1024" /></div>
+          </div>
+        </div>
+        <div class="panel-tabs">
+          <button class="ptab active" data-tab="char" data-i18n="tab.char">Char</button>
+          <button class="ptab" data-tab="conn" data-i18n="tab.conn">Conn</button>
+          <button class="ptab" data-tab="auto" data-i18n="tab.auto">Auto</button>
+          <button class="ptab" data-tab="steam" data-i18n="tab.steam">Steam</button>
+          <button class="ptab" data-tab="adv" data-i18n="tab.adv">Adv</button>
+        </div>
+      </div>
+      <div class="panel" id="p-objs">
+        <div class="panel-title"><span data-i18n="panel.world">World</span><span class="panel-btns"><i class="x">✕</i></span></div>
+        <div class="panel-body nopad">
+          <div class="lv objview" data-view="players">
+            <table class="worldtbl"><thead><tr><th class="c-ch" data-i18n="th.ch">Ch</th><th data-i18n="th.name">Name</th><th data-i18n="th.hp">HP</th><th data-i18n="th.state">State</th></tr></thead><tbody id="players-body"></tbody></table>
+          </div>
+          <div class="lv objview hidden" data-view="monsters">
+            <table class="worldtbl"><thead><tr><th class="c-ch" data-i18n="th.ch">Ch</th><th data-i18n="th.type">Type</th><th data-i18n="th.hp">HP</th></tr></thead><tbody id="monsters-body"></tbody></table>
+          </div>
+          <div class="lv objview hidden" data-view="items">
+            <table class="worldtbl"><thead><tr><th class="c-ch" data-i18n="th.ch">Ch</th><th data-i18n="th.item">Item</th></tr></thead><tbody id="items-body"></tbody></table>
+          </div>
+        </div>
+        <div class="panel-tabs">
+          <button class="otab active" data-view="players"><span data-i18n="tab.players">Players</span> <span id="cnt-players" class="tcount">0</span></button>
+          <button class="otab" data-view="monsters"><span data-i18n="tab.monsters">Monsters</span> <span id="cnt-monsters" class="tcount">0</span></button>
+          <button class="otab" data-view="items"><span data-i18n="tab.items">Items</span> <span id="cnt-items" class="tcount">0</span></button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="statusbar">
+    <span id="sb-state" class="sb-cell sb-grow" data-i18n="sb.ready">Ready</span>
+    <span id="sb-objs" class="sb-cell" data-i18n="sb.objects" data-i18n-args='{"n":0}'>0 objects</span>
+    <span id="sb-uptime" class="sb-cell" data-i18n="sb.uptime" data-i18n-args='{"t":"00:00"}'>Uptime 00:00</span>
+    <span id="sb-mode" class="sb-cell">SYNTH</span>
+  </div>
+
+  <div id="kick" class="overlay hidden">
+    <div class="dialog">
+      <div class="panel-title dlg"><span id="kick-title" data-i18n="dlg.disconnected">Disconnected</span><span class="panel-btns"><i class="x" id="kick-x">✕</i></span></div>
+      <div class="dialog-body">
+        <p id="kick-reason" class="hint">&mdash;</p>
+        <div class="dialog-btns"><button id="kick-ok" data-i18n="btn.ok">OK</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="slowdl" class="overlay hidden">
+    <div class="dialog">
+      <div class="panel-title dlg"><span data-i18n="dlg.slowTitle">Download is very slow</span><span class="panel-btns"><i class="x" id="slowdl-x">✕</i></span></div>
+      <div class="dialog-body">
+        <p id="slowdl-reason" class="hint">&mdash;</p>
+        <div class="dialog-btns"><button id="slowdl-cancel" data-i18n="btn.cancelDisconnect">Cancel (Disconnect)</button><button id="slowdl-continue" data-i18n="btn.continueWaiting">Continue waiting</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="about" class="overlay hidden">
+    <div class="dialog">
+      <div class="panel-title dlg"><span data-i18n="dlg.about">About</span><span class="panel-btns"><i class="x" id="about-x">✕</i></span></div>
+      <div class="dialog-body">
+        <p data-i18n-html="about.p1"><b>Killing Floor Bot Client</b> &mdash; L2Walker-style headless client for Killing Floor (UE2.5).</p>
+        <p data-i18n="about.p2">Copyright (c) 2026 TheBestPlan. Licensed under GPL-3.0-or-later.</p>
+        <p><a href="https://github.com/TheBestPlan/killingfloor-bot-client" target="_blank" rel="noreferrer">github.com/TheBestPlan/killingfloor-bot-client</a></p>
+        <div class="dialog-btns"><button id="about-ok" data-i18n="btn.ok">OK</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="browser" class="overlay hidden">
+    <div class="dialog wide">
+      <div class="panel-title dlg"><span data-i18n="dlg.browser">Server Browser</span><span class="panel-btns"><i class="x" id="browser-x">✕</i></span></div>
+      <div class="dialog-body">
+        <div class="browser-bar">
+          <input id="browser-search" type="text" data-i18n-ph="ph.browserSearch" placeholder="Search name / IP / map…" />
+          <span id="browser-status" class="browser-status">&mdash;</span>
+          <button id="browser-refresh" data-i18n="btn.refresh">Refresh</button>
+          <button id="browser-connect" disabled data-i18n="btn.connect">Connect</button>
+          <button id="browser-close" data-i18n="btn.close">Close</button>
+        </div>
+        <div class="browser-tablewrap">
+          <table class="browsertbl">
+            <thead><tr>
+              <!-- labels live in a span: the column resizer is appended into the th, and a language
+                   switch rewrites only the span instead of wiping the resizer. -->
+              <th class="c-ip"><span data-i18n="th.ip">IP</span></th><th class="c-name"><span data-i18n="th.serverName">Server Name</span></th><th class="c-num"><span data-i18n="th.players">Players</span></th>
+              <th class="c-list"><span data-i18n="th.playersList">Players List</span></th><th class="c-wave"><span data-i18n="th.wave">Wave</span></th><th class="c-ping"><span data-i18n="th.ping">Ping</span></th>
+              <th class="c-pw" data-i18n-title="tt.password" title="Password protected">🔒</th>
+            </tr></thead>
+            <tbody id="browser-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="i18n.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

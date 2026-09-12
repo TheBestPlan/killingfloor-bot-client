@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    
+    <radialGradient id="bot-18_bg" cx="50%" cy="42%" r="75%">
+      <stop offset="0%" stop-color="#2b100b"/><stop offset="52%" stop-color="#150807"/><stop offset="100%" stop-color="#070403"/>
+    </radialGradient>
+    <radialGradient id="bot-18_halo" cx="50%" cy="47%" r="46%">
+      <stop offset="0%" stop-color="#ff3a12" stop-opacity="0.34"/><stop offset="100%" stop-color="#ff3a12" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bot-18_sheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.10"/><stop offset="45%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="bot-18_clip"><rect x="0" y="0" width="1024" height="1024" rx="150"/></clipPath>
+    <radialGradient id="bot-18_redR" cx="430" cy="360" r="660" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ff8250"/><stop offset="48%" stop-color="#d63a1e"/><stop offset="100%" stop-color="#8a1610"/>
+    </radialGradient>
+    <linearGradient id="bot-18_redL" x1="180" y1="80" x2="620" y2="1000" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ff7a45"/><stop offset="55%" stop-color="#c9301c"/><stop offset="100%" stop-color="#7d130e"/>
+    </linearGradient>
+    <filter id="bot-18_glow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="26" result="b"/>
+      <feFlood flood-color="#ff3d16" flood-opacity="0.8"/>
+      <feComposite in2="b" operator="in" result="halo"/>
+      <feMerge><feMergeNode in="halo"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <g clip-path="url(#bot-18_clip)">
+    <rect width="1024" height="1024" fill="url(#bot-18_bg)"/>
+    
+    <rect width="1024" height="1024" fill="url(#bot-18_halo)"/>
+    <rect width="1024" height="1024" fill="url(#bot-18_sheen)"/>
+  </g>
+  <g clip-path="url(#bot-18_clip)" filter="url(#bot-18_glow)"><g fill="url(#bot-18_redR)"><rect x="353" y="189" width="72" height="72" rx="10"/><rect x="435" y="189" width="72" height="72" rx="10"/><rect x="517" y="189" width="72" height="72" rx="10"/><rect x="599" y="189" width="72" height="72" rx="10"/><rect x="271" y="271" width="72" height="72" rx="10"/><rect x="353" y="271" width="72" height="72" rx="10"/><rect x="435" y="271" width="72" height="72" rx="10"/><rect x="517" y="271" width="72" height="72" rx="10"/><rect x="599" y="271" width="72" height="72" rx="10"/><rect x="681" y="271" width="72" height="72" rx="10"/><rect x="189" y="353" width="72" height="72" rx="10"/><rect x="271" y="353" width="72" height="72" rx="10"/><rect x="353" y="353" width="72" height="72" rx="10"/><rect x="435" y="353" width="72" height="72" rx="10"/><rect x="517" y="353" width="72" height="72" rx="10"/><rect x="599" y="353" width="72" height="72" rx="10"/><rect x="681" y="353" width="72" height="72" rx="10"/><rect x="763" y="353" width="72" height="72" rx="10"/><rect x="189" y="435" width="72" height="72" rx="10"/><rect x="271" y="435" width="72" height="72" rx="10"/><rect x="435" y="435" width="72" height="72" rx="10"/><rect x="517" y="435" width="72" height="72" rx="10"/><rect x="681" y="435" width="72" height="72" rx="10"/><rect x="763" y="435" width="72" height="72" rx="10"/><rect x="189" y="517" width="72" height="72" rx="10"/><rect x="271" y="517" width="72" height="72" rx="10"/><rect x="435" y="517" width="72" height="72" rx="10"/><rect x="517" y="517" width="72" height="72" rx="10"/><rect x="681" y="517" width="72" height="72" rx="10"/><rect x="763" y="517" width="72" height="72" rx="10"/><rect x="189" y="599" width="72" height="72" rx="10"/><rect x="271" y="599" width="72" height="72" rx="10"/><rect x="353" y="599" width="72" height="72" rx="10"/><rect x="435" y="599" width="72" height="72" rx="10"/><rect x="517" y="599" width="72" height="72" rx="10"/><rect x="599" y="599" width="72" height="72" rx="10"/><rect x="681" y="599" width="72" height="72" rx="10"/><rect x="763" y="599" width="72" height="72" rx="10"/><rect x="271" y="681" width="72" height="72" rx="10"/><rect x="353" y="681" width="72" height="72" rx="10"/><rect x="435" y="681" width="72" height="72" rx="10"/><rect x="517" y="681" width="72" height="72" rx="10"/><rect x="599" y="681" width="72" height="72" rx="10"/><rect x="681" y="681" width="72" height="72" rx="10"/><rect x="271" y="763" width="72" height="72" rx="10"/><rect x="435" y="763" width="72" height="72" rx="10"/><rect x="517" y="763" width="72" height="72" rx="10"/><rect x="681" y="763" width="72" height="72" rx="10"/></g></g>
+  <g clip-path="url(#bot-18_clip)">
+    <rect x="7" y="7" width="1010" height="1010" rx="144" fill="none" stroke="#000" stroke-opacity="0.55" stroke-width="14"/>
+    <rect x="17" y="17" width="990" height="990" rx="136" fill="none" stroke="#ff8a5c" stroke-opacity="0.13" stroke-width="4"/>
+  </g>
+</svg>
