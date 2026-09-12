@@ -1,7 +1,8 @@
 name: release
 
 # Push a tag like v0.1.0 to build every OS, then publish all installers to a
-# single GitHub release (created as a draft; review the assets, then publish it).
+# single GitHub release (created as a draft with the CHANGELOG.md entry as its notes;
+# review the assets, then publish it).
 #
 # Each OS builds in parallel and only uploads its installers as workflow
 # artifacts. A single final job collects them and creates the release — running
@@ -55,6 +56,15 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
+      # The tag ref is what runs this job, so CHANGELOG.md is read at the released commit.
+      - uses: actions/checkout@v4
+
+      - name: Take release notes from CHANGELOG.md
+        run: |
+          node .github/scripts/changelog-section.js --self-test
+          node .github/scripts/changelog-section.js "$GITHUB_REF_NAME" > release-notes.md
+          cat release-notes.md
+
       - name: Download all installers
         uses: actions/download-artifact@v4
         with:
@@ -69,8 +79,8 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --draft \
             --title "$GITHUB_REF_NAME" \
-            --generate-notes \
-            2>/dev/null || echo "release $GITHUB_REF_NAME exists — updating its assets"
+            --notes-file release-notes.md \
+            2>/dev/null || gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --notes-file release-notes.md
           gh release upload "$GITHUB_REF_NAME" artifacts/* \
             --repo "$GITHUB_REPOSITORY" \
             --clobber
