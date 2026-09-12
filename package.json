@@ -1,0 +1,132 @@
+{
+  "name": "killingfloor-bot-client",
+  "productName": "Killing Floor Bot Client",
+  "version": "0.1.0",
+  "description": "L2Walker-style headless client for Killing Floor game (Unreal Engine 2.5)",
+  "keywords": [
+    "killingfloor",
+    "unreal-engine-2",
+    "headless-client",
+    "bot",
+    "network-protocol",
+    "steam",
+    "electron"
+  ],
+  "author": "TheBestPlan (https://github.com/TheBestPlan)",
+  "license": "GPL-3.0-or-later",
+  "homepage": "https://github.com/TheBestPlan/killingfloor-bot-client#readme",
+  "bugs": {
+    "url": "https://github.com/TheBestPlan/killingfloor-bot-client/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheBestPlan/killingfloor-bot-client.git"
+  },
+  "funding": [
+    "https://buymeacoffee.com/TheBestPlan",
+    "https://ko-fi.com/TheBestPlan",
+    "https://liberapay.com/TheBestPlan"
+  ],
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@11.13.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/bitstream.test.js && node test/netconn.test.js && node test/netcache.test.js && node test/repdecode.test.js && node test/worldstate.test.js && node test/netobjmap.test.js && node test/serverbrowser.test.js && node test/i18n.test.js && node test/navgraph.test.js && node test/maprender.test.js && node test/damageevents.test.js && node test/glidespeed.test.js && node test/movestall.test.js && node test/relay.smoke.js && node test/handshake.e2e.js",
+    "test:unit": "node test/bitstream.test.js && node test/netconn.test.js && node test/netcache.test.js && node test/repdecode.test.js && node test/worldstate.test.js && node test/netobjmap.test.js && node test/serverbrowser.test.js && node test/i18n.test.js && node test/navgraph.test.js && node test/maprender.test.js && node test/damageevents.test.js && node test/glidespeed.test.js",
+    "relay": "node phase1_relay.js",
+    "client": "node phase2_client.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "release": "electron-builder --publish always",
+    "bump": "commit-and-tag-version",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "koffi": "^3.0.2"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
+    "commit-and-tag-version": "12.7.3",
+    "electron": "^33.0.0",
+    "electron-builder": "^26.15.3",
+    "husky": "9.1.7"
+  },
+  "build": {
+    "appId": "io.github.thebestplan.killingfloorbotclient",
+    "productName": "Killing Floor Bot Client",
+    "artifactName": "KillingFloor-Bot-Client-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "runner.js",
+      "renderer/**/*",
+      "lib/**/*",
+      "assets/**/*",
+      "LICENSE"
+    ],
+    "electronLanguages": [
+      "en-US"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "KillingFloor-Bot-Client-${version}-${os}-${arch}-setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "KillingFloor-Bot-Client-${version}-${os}-${arch}-portable.${ext}"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "category": "public.app-category.utilities",
+      "icon": "build/icon.png"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Game",
+      "icon": "build/icon.png",
+      "maintainer": "TheBestPlan"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "TheBestPlan",
+        "repo": "killingfloor-bot-client"
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+# pnpm config home (pnpm 10+ reads settings from here, not the package.json "pnpm" field).
+# Allow koffi + Electron install scripts to run so they set up their prebuilt binaries.
+allowBuilds:
+  koffi: true
+  electron: true
+  electron-winstaller: false
+
+# Disable pnpm 11's minimum-release-age supply-chain gate for this repo. CI runs
+# `pnpm install --frozen-lockfile`, which installs the exact integrity-hashed
+# versions from pnpm-lock.yaml with no fresh resolution — the age gate only blocks
+# our own pinned electron (freshly published) without adding security here.
+minimumReleaseAge: 0

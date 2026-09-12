@@ -1,0 +1,65 @@
+# --- runtime ---
+node_modules/
+dist/
+out/
+captures/
+*.log
+package-lock.json
+npm-debug.log*
+
+# --- external deps, NOT bundled (see docs): junction to the dedicated-server install ---
+_kfds/
+_kfds
+_temp/
+
+# --- 32-bit Steam helper: keep steamhelper.js, ignore downloaded node + koffi binary ---
+_steam32/node-v*/
+_steam32/node_modules/
+_steam32/package.json
+_steam32/package-lock.json
+_steam32/steam_appid.txt
+_steam32/*.zip
+_steam32/*.tgz
+_steam32/*.tar
+_steam32/package/
+_steam32/idx.json
+
+# --- Ghidra: keep run-ghidra.js + kfscripts/*.java + scanner, ignore the Ghidra/JDK installs ---
+_ghidra/ghidra/
+_ghidra/jdk/
+_ghidra/proj/
+_ghidra/*.zip
+_ghidra/*.json
+_ghidra/*-out*.log
+_ghidra/map-out.log
+
+# --- Goldberg (gbe_fork): all downloaded/third-party; nothing committed ---
+_goldberg/src/
+_goldberg/*.7z
+_goldberg/*.tgz
+_goldberg/*.tar
+_goldberg/extracted/
+_goldberg/cfg/
+_goldberg/readme/
+_goldberg/package/
+_goldberg/*.json
+
+# --- misc ---
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+*.orig
+*.swp
+*~
+.vscode/
+.idea/
+.code-review-graph
+# local settings incl. the Steam Web API key (runtime state)
+settings.ini
+
+# downloaded server packages (runtime)
+downloads/
+
+# rendered map backgrounds (runtime)
+cache/

@@ -1,0 +1,21 @@
+# Normalize line endings: LF in the repo for everything text, checkout-native off.
+* text=auto eol=lf
+
+# Windows-only scripts keep CRLF so they run correctly on Windows.
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary assets — never diff or convert.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.dll binary
+*.exe binary
+*.node binary
+*.7z binary
+*.zip binary
+*.tgz binary
+*.tar binary
